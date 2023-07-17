@@ -1,64 +1,70 @@
 Constant Story "9:05";
-
 Constant Headline
   "^by Adam Cadre^
   Перевод: Александр Мосьпан. Порт: Всеволод Зубарев.^^";
 
 Include "Parser";
-
-Object LibraryMessages
-  with
-  before [;
-    Attack:
-      "Это пустая трата сил.";
-    Push, Pull:
-      "Это ни к чему не приводит.";
-    Sleep:
-      "Ты и так проспал слишком долго!";
-  ];
-
-Include "VerbLib";
+Include "RussiaG";
 
 Statusline time;
 
+!============================================================================
+! Entry point constants, objects and routines
+!============================================================================
+
 Global IsPlayerClean = false;
 
-[ boldstring str;
-  style bold;
-  print (string) str;
-  style roman;
-];
-
-! todo: восстановить функцию паузы
-![ Pause k;
-  ! @read_char 1 -> k;
-!  rtrue;
-!];
-
-!Object -> -> thief "(thief)"
-! with name 'mud' 'dried' 'sweat',
-!  description "    ysc",
-!  !number [3 e7],
-!has animate proper;
-
 Object soiled_clothing "грязн/ая одежд/а"
-  with name 'грязн' 'одежд',
-  before [;
-    Wear:
-      if (IsPlayerClean)
-        "Надевание грязной одежды на чистое тело уничтожит весь смысл принятия душа.";
-  ],
-  description [;
-    "Эта одежда безнадёжно испорчена. Ни одна прачечная не сможет отстирать ", (boldstring) "эти", " пятна.";
-  ],
-  has clothing worn female;
+  with
+    name 'грязн' 'одежд',
+    before [;
+      Wear:
+        if (IsPlayerClean)
+          "Надевание грязной одежды на чистое тело уничтожит весь смысл принятия душа.";
+    ],
+    description [;
+      "Эта одежда безнадёжно испорчена. Ни одна прачечная не сможет отстирать ", (boldstring) "эти", " пятна.";
+    ],
+  has
+    clothing worn female;
 
 Object gold_watch "золот/ые час/ы"
-  with name 'золот' 'час',
-  description [;
-    print_ret "На твоих часах ", the_time / 60, ":", (the_time % 60) / 10, the_time % 10, ".";
-  ],
+  with
+    name 'золот' 'час',
+    description [;
+      print_ret "На твоих часах ", the_time / 60, ":", (the_time % 60) / 10, the_time % 10, ".";
+    ],
   has clothing worn pluralname;
+
+Object LibraryMessages
+  with
+    before [;
+      Attack:
+        "Это пустая трата сил.";
+      Push, Pull:
+        "Это ни к чему не приводит.";
+      Sleep:
+        "Ты и так проспал слишком долго!";
+    ];
+
+Include "VerbLib"; ! should be included after LibraryMessages redefinition
+
+[ Initialise;
+  print "^^^Телефон звонит.^^
+  О нет, сколько же ты проспал?! Конечно, ночь была тяжёлой, но всё же это плохо, очень плохо.^^
+  Телефон звонит.^^";
+
+  lookmode = 2; ! like the VERBOSE command
+  SetTime(60 * 9 + 5, 1);
+
+!  location = driveway;
+!  move keys to player;
+!  rtrue;
+  location = bed;
+  move soiled_clothing to player;
+  move gold_watch to player;
+  player.description = PlayerDesc;
+];
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Спальня
@@ -80,7 +86,8 @@ Object Bedroom "Спальня"
       Take:
         "Оно не чище чем то что на тебе.";
     ],
-    description "Майки, трусы. Как обычно.",
+    description
+      "Майки, трусы. Как обычно.",
     has clothing scenery neuter;
 
   Object -> dresser "шкаф/"
@@ -97,7 +104,7 @@ Object Bedroom "Спальня"
         Disrobe:
           "Сейчас не время переодеваться.";
         Wear:
-          if (IsPlayerClean == 0)
+          if (IsPlayerClean == false)
             "Глупо надевать чистую, свежую одежду, пока тебя покрывает грязь и засохший пот.";
       ],
       description
@@ -232,8 +239,8 @@ Object Bathroom "Ванная"
         "Было бы неплохо раздеться, прежде чем принимать душ.";
       if (children(player) ~= 0)
         "Нести свои вещи под душ — это плохая идея.";
-      if (IsPlayerClean == 0) {
-      	IsPlayerClean = 1;
+      if (IsPlayerClean == false) {
+      	IsPlayerClean = true;
         "Ты становишься под душ, включаешь воду, и через несколько мгновений чувствуешь себя обновлённым.
         Но нельзя тратить время — ты выпрыгиваешь обратно, и моментально обсыхаешь.";
       }
@@ -250,7 +257,7 @@ Object Bathroom "Ванная"
 Object Living_room "Гостиная"
   with description "Мебель расставлена не так красиво, как могла бы, и явно не хватает предметов, которые помогли бы приятно скоротать вечер — нет стереосистемы, телевизора, DVD-проигрывателя, ничего из электроники. Но всё равно эта комната лучше, чем большинство в этом районе. Кухня расположена на востоке, спальня — на западе. Входная дверь — на юге.",
   s_to [;
-    if (IsPlayerClean == 0)
+    if (IsPlayerClean == false)
       "Тебе нужно почиститься. Сейчас ты выглядишь как потерпевший кораблекрушение. Если выйти на улицу в таком виде, любопытные взгляды только усугубят и без того плохую ситуацию.";
     if (clean_clothing hasnt worn)
       "Выходить на улицу голым, как минимум, неумно.";
@@ -563,31 +570,8 @@ Object -> -> -> note "записк/а"
   has female;
 
 !============================================================================
-! Entry point routines
-!============================================================================
-
-[ Initialise;
-  print "^^^Телефон звонит.^^
-  О нет, сколько же ты проспал?! Конечно, ночь была тяжёлой, но всё же это плохо, очень плохо.^^
-  Телефон звонит.^^";
-
-  lookmode = 2;
-  SetTime(60 * 9 + 5, 1);
-
-!  location = driveway;
-!  move keys to player;
-!  rtrue;
-  location = bed;
-  move soiled_clothing to player;
-  move gold_watch to player;
-  player.description = PlayerDesc;
-];
-
-!============================================================================
 ! Stanard and extended grammar
 !============================================================================
-
-Include "RussiaG";
 
 ! для «принять душ»
 Verb "прин"
@@ -622,14 +606,14 @@ Extend only "ех" "езж" first
 [ WipeSub;
   if (location ~= bathroom)
     "Тебе нечем умыться.";
-  if (IsPlayerClean == 0)
+  if (IsPlayerClean == false)
     "Сейчас тебе может помочь только душ.";
   else
     "Ты уже чистый.";
 ];
 
 [ PlayerDesc;
-  if (IsPlayerClean == 0)
+  if (IsPlayerClean == false)
     "Ты покрыт грязью и засохшим потом. Это была изматывающая ночка — неудивительно, что ты проспал! Даже то, что ты добрался до постели, прежде чем вырубиться — уже огромное достижение.";
   else
     "После душа ты выглядишь гораздо лучше.";
@@ -662,3 +646,18 @@ Extend only "ех" "езж" first
   else
     print "Идти в офис Боумэна без подписанного бланка? Не очень умно.^";
 ];
+
+
+! Helper functions
+
+[ boldstring str;
+  style bold;
+  print (string) str;
+  style roman;
+];
+
+! todo: восстановить функцию паузы
+![ Pause k;
+!  @read_char 1 -> k;
+!  rtrue;
+!];
