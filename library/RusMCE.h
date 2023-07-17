@@ -556,8 +556,7 @@ return -1;
 
 ! Специфичная версия для 'LanguageRefers'
 
-[ EndingLookup addr len csID
-  v u ocFN i;
+[ EndingLookup addr len csID v u ocFN i;
 
   if (csID == 0) rtrue;     !! (любой падеж допустим)
 
@@ -587,8 +586,6 @@ return -1;
       PL_Req: rfalse;     ! (больше нет вариантов)
     }
   }
-
-  rfalse;
 ];
 
 !
