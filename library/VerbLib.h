@@ -25,27 +25,27 @@ Default SACK_OBJECT      0;
 Default TASKS_PROVIDED   1;
 
 #Ifndef task_scores;
-! Constant MAKE__TS;
-! #Endif;
-! #Ifdef MAKE__TS;
-Array  task_scores -> 0 0 0 0;
+  ! Constant MAKE__TS;
+  ! #Endif;
+  ! #Ifdef MAKE__TS;
+  Array  task_scores -> 0 0 0 0;
 #Endif;
 
 Array  task_done -> NUMBER_TASKS;
 
 #Ifndef LibraryMessages;
-Object LibraryMessages;
+  Object LibraryMessages;
 #Endif;
 
 #Ifndef NO_PLACES;
-[ ObjectsSub; Objects1Sub(); ];
-[ PlacesSub;  Places1Sub(); ];
+  [ ObjectsSub; Objects1Sub(); ];
+  [ PlacesSub;  Places1Sub(); ];
 #Endif; ! NO_PLACES
 
 #Ifdef USE_MODULES;
-Link "verblibm";
+  Link "verblibm";
 #Ifnot;
-Include "verblibm";
+  Include "verblibm";
 #Endif; ! USE_MODULES
 
 ! ==============================================================================
