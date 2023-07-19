@@ -238,22 +238,24 @@ Object Bathroom "Ванная"
     has scenery male;
 
   Object -> shower "душ/"
-    with name 'душ' 'душев' 'кабинк',
-    before [;
-      UseExtra, Enter:
-      if (soiled_clothing has worn)
-        "Было бы неплохо раздеться, прежде чем принимать душ.";
-      if (children(player) ~= 0)
-        "Нести свои вещи под душ — это плохая идея.";
-      if (IsPlayerClean == false) {
-      	IsPlayerClean = true;
-        "Ты становишься под душ, включаешь воду, и через несколько мгновений чувствуешь себя обновлённым.
-        Но нельзя тратить время — ты выпрыгиваешь обратно, и моментально обсыхаешь.";
-      }
-      else
-        "Ты уже чистый.";
-    ],
-    description "Вертикальная душевая кабинка без ванны.",
+    with
+      name 'душ' 'душев' 'кабинк',
+      before [;
+        UseExtra, Enter:
+        if (soiled_clothing has worn)
+          "Было бы неплохо раздеться, прежде чем принимать душ.";
+        if (children(player) ~= 0)
+          "Нести свои вещи под душ — это плохая идея.";
+        if (IsPlayerClean == false) {
+        	IsPlayerClean = true;
+          "Ты становишься под душ, включаешь воду, и через несколько мгновений чувствуешь себя обновлённым.
+          Но нельзя тратить время — ты выпрыгиваешь обратно, и моментально обсыхаешь.";
+        }
+        else
+          "Ты уже чистый.";
+      ],
+      description
+        "Вертикальная душевая кабинка без ванны.",
     has scenery male;
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -261,17 +263,18 @@ Object Bathroom "Ванная"
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 Object Living_room "Гостиная"
-  with description "Мебель расставлена не так красиво, как могла бы, и явно не хватает предметов, которые помогли бы приятно скоротать вечер — нет стереосистемы, телевизора, DVD-проигрывателя, ничего из электроники. Но всё равно эта комната лучше, чем большинство в этом районе. Кухня расположена на востоке, спальня — на западе. Входная дверь — на юге.",
-  s_to [;
-    if (IsPlayerClean == false)
-      "Тебе нужно почиститься. Сейчас ты выглядишь как потерпевший кораблекрушение. Если выйти на улицу в таком виде, любопытные взгляды только усугубят и без того плохую ситуацию.";
-    if (clean_clothing hasnt worn)
-      "Выходить на улицу голым, как минимум, неумно.";
-    else
-      return front_door;
-  ],
-  e_to Kitchenette,
-  w_to bedroom_door,
+  with
+    description "Мебель расставлена не так красиво, как могла бы, и явно не хватает предметов, которые помогли бы приятно скоротать вечер — нет стереосистемы, телевизора, DVD-проигрывателя, ничего из электроники. Но всё равно эта комната лучше, чем большинство в этом районе. Кухня расположена на востоке, спальня — на западе. Входная дверь — на юге.",
+    s_to [;
+      if (IsPlayerClean == false)
+        "Тебе нужно почиститься. Сейчас ты выглядишь как потерпевший кораблекрушение. Если выйти на улицу в таком виде, любопытные взгляды только усугубят и без того плохую ситуацию.";
+      if (clean_clothing hasnt worn)
+        "Выходить на улицу голым, как минимум, неумно.";
+      else
+        return front_door;
+    ],
+    e_to Kitchen,
+    w_to bedroom_door,
   has light;
 
   Object -> bedroom_door "двер/ь спальни"
@@ -298,9 +301,11 @@ Object Living_room "Гостиная"
     	return ICVowel (csID, beg, end, 'о', 0);
     ],
     before [;
-    	Lock: <<Lock front_door>>;
+    	Lock:
+        <<Lock front_door>>;
     ],
-    description "Замок сломан.",
+    description
+      "Замок сломан.",
     has scenery male;
 
   Object -> furniture "мебел/ь"
@@ -315,50 +320,50 @@ Object Living_room "Гостиная"
 ! Кухня
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-Object Kitchenette "Кухня"
+Object Kitchen "Кухня"
   with w_to Living_room,
   out_to Living_room,
   description "У тебя совсем нет время искать еду и готовить себе вкусный завтрак прямо сейчас. Лучше действовать в темпе. Выход на западе.",
   has light;
 
-Object -> counter "стойк/а"
-  with name 'стойк',
-  description "Огнеупорная пластмасса.",
-  has scenery supporter female;
+  Object -> counter "стойк/а"
+    with name 'стойк',
+    description "Огнеупорная пластмасса.",
+    has scenery supporter female;
 
-Object -> -> toaster "тостер/"
-  with
-    name 'тостер',
-    before [;
-      Receive:
-        if (noun == bread && bread hasnt general) {
-  				give bread general;
-          "Ломтик разогревается и симпатично подрумянивается. Пару секунд ты ждёшь, пока он остынет, и достаёшь из тостера.";
-        }
-        if (noun == bread)
-          "Так ты просто сожжёшь его.";
-        else
-          "Не стоит этого делать.";
-      SwitchOn, SwitchOff:
-        "Он включается и выключается автоматически.";
-    ],
-    description
-      "Простой тостер.",
-  has male;
+    Object -> -> toaster "тостер/"
+      with
+        name 'тостер',
+        before [;
+          Receive:
+            if (noun == bread && bread hasnt general) {
+      				give bread general;
+              "Ломтик разогревается и симпатично подрумянивается. Пару секунд ты ждёшь, пока он остынет, и достаёшь из тостера.";
+            }
+            if (noun == bread)
+              "Так ты просто сожжёшь его.";
+            else
+              "Не стоит этого делать.";
+          SwitchOn, SwitchOff:
+            "Он включается и выключается автоматически.";
+        ],
+        description
+          "Простой тостер.",
+      has male;
 
-Object -> -> bread "ломтик/ хлеба"
-  with
-    name 'ломтик' 'хлеб' 'тост' 'кусочек',
-    after [;
-      Eat: "Не завтрак в ресторане, конечно, но сойдёт.";
-    ],
-    description [;
-      if (self has general)
-        "Кусочек хлеба, поджаренный в тостере.";
-      else
-        "Кусочек хлеба. Свежий.";
-    ],
-  has edible male;
+    Object -> -> bread "ломтик/ хлеба"
+      with
+        name 'ломтик' 'хлеб' 'тост' 'кусочек',
+        after [;
+          Eat: "Не завтрак в ресторане, конечно, но сойдёт.";
+        ],
+        description [;
+          if (self has general)
+            "Кусочек хлеба, поджаренный в тостере.";
+          else
+            "Кусочек хлеба. Свежий.";
+        ],
+      has edible male;
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Дорога у дома
@@ -379,45 +384,47 @@ Object Driveway "Дорога"
     ],
   has light;
 
-Object -> car "машин/а"
-  with
-    name 'машин' 'авто' 'автомобил',
-    before [;
-      Open, Unlock:
-        if (noun == keys) {
-          "Ты открываешь дверь машины.";
-        }
-      Enter:
-        if (keys notin player) {
-          "Машина заперта.";
-        }
-        if (self in parking_lot) {
-          print "Ты садишься обратно за руль и возвращаешься к дому...^";
-          move self to Driveway;
-          PlayerTo (Driveway);
-          rtrue;
-        }
-    ],
-    after [;
-      Enter: "Ты открываешь дверь машины, забираешься внутрь, и заводишь двигатель.";
-    ],
-    description "Очень неплохая машина для такого района. Она прямо притягивает взгляд.",
-    describe [;
-      if (self in Driveway) "^Машина припаркована на дороге.";
-      else rtrue;
-    ],
-    with_key keys,
-  has enterable lockable locked transparent female;
+  Object -> car "машин/а"
+    with
+      name 'машин' 'авто' 'автомобил',
+      before [;
+        Open, Unlock:
+          if (noun == keys) {
+            "Ты открываешь дверь машины.";
+          }
+        Enter:
+          if (keys notin player) {
+            "Машина заперта.";
+          }
+          if (self in parking_lot) {
+            print "Ты садишься обратно за руль и возвращаешься к дому...^";
+            move self to Driveway;
+            PlayerTo (Driveway);
+            rtrue;
+          }
+      ],
+      after [;
+        Enter: "Ты открываешь дверь машины, забираешься внутрь, и заводишь двигатель.";
+      ],
+      description "Очень неплохая машина для такого района. Она прямо притягивает взгляд.",
+      describe [;
+        if (self in Driveway) "^Машина припаркована на дороге.";
+        else rtrue;
+      ],
+      with_key keys,
+    has enterable lockable locked transparent female;
 
-Object -> trunk "багажник/"
-  with
-    name 'багажник',
-    before [;
-      Open: <<Examine self>>;
-    ],
-    description "Ты бросаешь быстрый взгляд на содержимое багажника. Телевизор, стереосистема, DVD-плеер — довольно впечатляющий улов.",
-    found_in parking_lot Driveway,
-  has scenery male;
+  Object -> trunk "багажник/"
+    with
+      name 'багажник',
+      before [;
+        Open:
+          <<Examine self>>;
+      ],
+      description
+        "Ты бросаешь быстрый взгляд на содержимое багажника. Телевизор, стереосистема, DVD-плеер — довольно впечатляющий улов.",
+      found_in parking_lot Driveway,
+    has scenery male;
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Дорога
@@ -464,47 +471,51 @@ Object Driving "Поездка"
     ],
   has light;
 
-Object -> car2 "машин/а"
-  with
-    name 'машин' 'авто' 'автомобил',
-    before [;
-      Enter: "Но ты уже в машине!";
-    ],
-    description "Очень неплохая машина для такого района. Она прямо притягивает взгляд.",
-  has scenery female;
+  Object -> car2 "машин/а"
+    with
+      name 'машин' 'авто' 'автомобил',
+      before [;
+        Enter: "Но ты уже в машине!";
+      ],
+      description "Очень неплохая машина для такого района. Она прямо притягивает взгляд.",
+    has scenery female;
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Стоянка Лаунгент Технолоджиз
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 Object parking_lot "Стоянка Лаунгент Технолоджиз"
-  with description "Ты у служебного входа в здание Лаунгент Технолоджиз. Около двери находится прорезь, и табличка с надписью: «ВСТАВЬТЕ КАРТОЧКУ».
-  	^^Машина припаркована на стоянке.",
+  with description
+   "Ты у служебного входа в здание Лаунгент Технолоджиз. Около двери находится прорезь, и табличка с надписью: «ВСТАВЬТЕ КАРТОЧКУ».^^
+  	Машина припаркована на стоянке.",
   has light;
 
-Object -> glass_door "двер/ь"
-  with
-    name 'двер',
-    before [;
-      Open: "С этой стороны она открывается автоматически";
-    ],
-    description "Стеклянная дверь с табличкой: «СЛУЖЕБНЫЙ ВХОД»",
-  has lockable locked openable scenery female;
+  Object -> glass_door "двер/ь"
+    with
+      name 'двер',
+      before [;
+        Open:
+          "С этой стороны она открывается автоматически";
+      ],
+      description
+        "Стеклянная дверь с табличкой: «СЛУЖЕБНЫЙ ВХОД»",
+    has lockable locked openable scenery female;
 
-Object -> slot "прорез/ь"
-  with
-    name 'прорезь' 'отверстие' 'щель',
-    before [;
-      Receive:
-        if (noun ~= ID_card)
-          "Она принимает только идентификационные карточки Лаунгент Технолоджиз.";
-        else
-          print "Загорается зелёный светодиод, дверь со щелчком открывается, и ты входишь внутрь.^";
-          PlayerTo(Loungent_Tech);
-          return true;
-    ],
-    description "Отверстие для идентификационных карточек Лаунгент Технолоджиз.",
-  has scenery container open female;
+  Object -> slot "прорез/ь"
+    with
+      name 'прорезь' 'отверстие' 'щель',
+      before [;
+        Receive:
+          if (noun ~= ID_card)
+            "Она принимает только идентификационные карточки Лаунгент Технолоджиз.";
+          else
+            print "Загорается зелёный светодиод, дверь со щелчком открывается, и ты входишь внутрь.^";
+            PlayerTo(Loungent_Tech);
+            return true;
+      ],
+      description
+        "Отверстие для идентификационных карточек Лаунгент Технолоджиз.",
+    has scenery container open female;
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Лаунгент Технолоджиз
@@ -524,66 +535,79 @@ Object Loungent_Tech "Лаунгент Технолоджиз"
       "Ты стоишь в коридоре у служебного входа в Лаунгент Технолоджиз. Коридор ведёт на север, в приёмную, и на юг, к парковке. Дверь с табличкой «Мэттью Боуман» расположена на западе.",
   has light;
 
-Object -> back_door "входн/ая дверь"
-  with name 'входн' 'дверь',
-  before [;
-    Open: "Она открывается автоматически.";
-  ],
-  description "Стеклянная дверь с надписью «ДОХВ ЙЫНБЕЖУЛС».",
-  has scenery female;
+  Object -> back_door "входн/ая дверь"
+    with
+      name 'входн' 'дверь',
+      before [;
+        Open: "Она открывается автоматически.";
+      ],
+      description
+        "Стеклянная дверь с надписью «ДОХВ ЙЫНБЕЖУЛС».",
+    has scenery female;
 
-Object -> Bowman_s_door "дверь Боумэна"
-  with name 'двер' 'боумэна',
-  before [;
-    Open, Enter: Bowman_room(); return true;
-  ],
-  description "На ней табличка: «Мэттью Боуман».",
-  has door openable proper scenery female;
+  Object -> Bowman_s_door "дверь Боумэна"
+    with
+      name 'двер' 'боумэна',
+      before [;
+        Open, Enter: Bowman_room(); return true;
+      ],
+      description
+        "На ней табличка: «Мэттью Боуман».",
+    has door openable proper scenery female;
 
-Object -> cubicle "кабинк/а"
-  with name 'кабинк' 'кабин',
-  after [;
-    Enter: print "Ты входишь в кабинку.^"; <<Look>>;
-  ],
-  description "Стены недостаточно высокие, чтобы обеспечить тебе хоть немного уединения.",
-  describe "^Неподалёку стоит небольшая кабинка, подписанная просто «Хэдли».",
-  has container enterable open transparent female;
+  Object -> cubicle "кабинк/а"
+    with
+      name 'кабинк' 'кабин',
+      after [;
+        Enter:
+          print "Ты входишь в кабинку.^";
+          <<Look>>;
+      ],
+      description
+        "Стены недостаточно высокие, чтобы обеспечить тебе хоть немного уединения.",
+      describe
+        "^Неподалёку стоит небольшая кабинка, подписанная просто «Хэдли».",
+    has container enterable open transparent female;
 
-Object -> -> desk "стол/"
-  with name 'стол',
-  description "Этот дешёвый стол прикреплён к стенкам кабинки.",
-  has scenery supporter male;
+    Object -> -> desk "стол/"
+      with name 'стол',
+      description "Этот дешёвый стол прикреплён к стенкам кабинки.",
+      has scenery supporter male;
 
-Object -> -> -> form "бланк/"
-  with name 'бланк' 'форму',
-  before [;
-    Sign:
-      if (self hasnt general && pen in player) {
-      	give self general;
-        "Ты подписываешь бумагу.";
-      }
-      if (self hasnt general)
-        "Тебе нечем подписать.";
-      else
-        "Ты уже поставил подпись.";
-  ],
-  description [;
-    if (self hasnt general)
-      "Бланк с маркировкой «209F». Он заполнен, но не подписан.";
-    else
-      "Бланк с маркировкой «209F». На нём стоит твоя подпись.";
-  ],
-  has male;
+      Object -> -> -> form "бланк/"
+        with name 'бланк' 'форму',
+        before [;
+          Sign:
+            if (self hasnt general && pen in player) {
+            	give self general;
+              "Ты подписываешь бумагу.";
+            }
+            if (self hasnt general)
+              "Тебе нечем подписать.";
+            else
+              "Ты уже поставил подпись.";
+        ],
+        description [;
+          if (self hasnt general)
+            "Бланк с маркировкой «209F». Он заполнен, но не подписан.";
+          else
+            "Бланк с маркировкой «209F». На нём стоит твоя подпись.";
+        ],
+        has male;
 
-Object -> -> -> pen "ручк/а"
-  with name 'ручк',
-  description "Обычная шариковая ручка.",
-  has female;
+      Object -> -> -> pen "ручк/а"
+        with
+          name 'ручк',
+          description
+            "Обычная шариковая ручка.",
+        has female;
 
-Object -> -> -> note "записк/а"
-  with name 'записк',
-  description "Ты читаешь: «Хэдли, подпиши форму 209, и НЕМЕДЛЕННО зайди ко мне! МБ».",
-  has female;
+      Object -> -> -> note "записк/а"
+        with
+          name 'записк',
+          description
+            "Ты читаешь: «Хэдли, подпиши форму 209, и НЕМЕДЛЕННО зайди ко мне! МБ».",
+        has female;
 
 !============================================================================
 ! Stanard and extended grammar
